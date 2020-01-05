@@ -146,16 +146,15 @@ class Application(QTcpSocketClient):
                 % (app.name, context)
             )
 
+
         # check if we have a different template to copy from than the original
-        template_project_folder = settings.get("template_project_folder")
-        if not os.path.exists(template_project_folder):
-            template_project_folder = None
+        template_project_folder = settings.get("template_project_folder", None)
+        if template_project_folder and os.path.exists(template_project_folder):
+            source_path = template_project_folder
+        else:
+            source_path = os.environ["SGTK_HARMONY_NEWFILE_TEMPLATE"]
 
         # now we copy the newfile template to the destination path
-        source_path = (
-            template_project_folder
-            or os.environ["SGTK_HARMONY_NEWFILE_TEMPLATE"]
-        )
         app.log_debug("Source_path: %s" % source_path)
 
         work_template = app.get_template_from(settings, "template_work")
