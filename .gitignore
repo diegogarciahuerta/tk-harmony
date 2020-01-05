@@ -1,0 +1,41 @@
+*.py[co]
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+.stversions
+.stfolder
+.stignore
+
+test_engine.bat
+test_engine.py
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+
+#Translations
+*.mo
+
+#Mr Developer
+.mr.developer.cfg
+
+# PyCharm project settings
+.idea
+
+# Max OS X Desktop Services Store files
+.DS_Store
+
+*.*~

@@ -1,0 +1,3 @@
+ToonBoomAnimationInc PaletteList 1
+palette-library/template LINK "./palette-library/template.plt"
+palette-library/template_pencil_texture LINK "./palette-library/template_pencil_texture.plt"

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project source="Harmony Premium (HarmonyPremium.exe) version 15.0.5 build 13929 2018-08-13 08:19:50" version="1505" build="13929" creator="harmony">
+ <elements>
+  <element id="3" elementName="Shotgun_Banner" elementFolder="Shotgun_Banner" pixmapFormat="11" scanType="2" fieldChart="12" vectorType="0" rootFolder="elements">
+   <drawings>
+    <dwg name="1"/>
+   </drawings>
+  </element>
+ </elements>
+ <options>
+  <metrics unitAspectRatioX="4" unitAspectRatioY="3" numberOfUnitsX="24" numberOfUnitsY="24" numberOfUnitsZ="12"/>
+  <resolution name="HDTV_1080p24" size="1920,1080" fovFit="VerticalFitFov" fov="41.112090439166927" projection="PerspectiveProjection"/>
+  <framerate val="24"/>
+  <zdragging val="true"/>
+  <zOrderCompatibilityWith7_3 val="false"/>
+  <pixelPerModelUnitForVectorLayers val="0.28800000000000009"/>
+  <pixelPerModelUnitForBitmapLayers val="0.28800000000000009"/>
+  <canvasForBitmapLayers size="3840,2160"/>
+  <cameraInSymbols val="true"/>
+  <scaleFactor val="1"/>
+ </options>
+ <timelineMarkers/>
+ <scenes>
+  <scene name="Top" id="09a3701060100c0b" nbframes="60">
+   <columns>
+    <column type="0" name="ATV-09A4CCFAE610150D" displayOrder="1" width="100" anonymous="true" id="3">
+     <elementSeq exposures="1-60" val="1" id="3"/>
+    </column>
+   </columns>
+   <options>
+    <defaultDisplay val="Display"/>
+   </options>
+   <rootgroup name="Top">
+    <options>
+     <collapsed val="false"/>
+    </options>
+    <nodeslist>
+     <module type="SCRIPT_MODULE" name="Shotgun_Engine" pos="-628,-340,3" publishUnderTab="ScriptModule">
+      <options>
+       <color val="#0000FFFF"/>
+       <collapsed val="false"/>
+       <nodeShowThumbnail val="true"/>
+       <version val="1"/>
+      </options>
+      <attrs>
+       <specsEditor>
+        <val>
+         <![CDATA[<specs>
+  <ports>
+    <in type="IMAGE"/>
+    <out type="IMAGE"/>
+  </ports>
+  <attributes>
+  </attributes>
+</specs>
+]]>
+        </val>
+       </specsEditor>
+       <scriptEditor>
+        <filename/>
+        <editor>
+         <val>
+          <![CDATA[MessageLog.trace("Shotgun Startup Project Loaded");
+System.println("Shotgun Startup Project Loaded");
+]]>
+         </val>
+        </editor>
+       </scriptEditor>
+       <initScript>
+        <filename/>
+        <editor val="// Following code will be called during creation of
+// Script Module.
+"/>
+       </initScript>
+       <cleanupScript>
+        <filename/>
+        <editor val="// Following code will be called during destruction of
+// Script Module.
+// ..."/>
+       </cleanupScript>
+       <uiScript>
+        <filename/>
+        <editor/>
+       </uiScript>
+       <uiData/>
+       <files/>
+      </attrs>
+     </module>
+     <module type="DISPLAY" name="Display" pos="-621,-100,4" publishUnderTab="Display">
+      <options>
+       <collapsed val="false"/>
+       <nodeShowThumbnail val="true"/>
+       <version val="1"/>
+      </options>
+     </module>
+     <module type="READ" name="Shotgun_Banner" pos="-636,-220,1" publishUnderTab="Shotgun_Banner">
+      <options>
+       <locked val="true"/>
+       <collapsed val="false"/>
+       <nodeShowThumbnail val="true"/>
+       <version val="1"/>
+      </options>
+      <attrs>
+       <enable3d val="false"/>
+       <faceCamera val="false"/>
+       <cameraAlignment val="NO_CAMERA_ALIGNMENT"/>
+       <offset>
+        <separate val="true"/>
+        <x val="0" defaultValue="0"/>
+        <y val="0" defaultValue="0"/>
+        <z val="0" defaultValue="0"/>
+       </offset>
+       <scale>
+        <separate val="true"/>
+        <inFields val="false"/>
+        <xy val="1" defaultValue="1"/>
+        <x val="1" defaultValue="1"/>
+        <y val="1" defaultValue="1"/>
+        <z val="1" defaultValue="1"/>
+       </scale>
+       <rotation>
+        <separate val="false"/>
+        <anglex val="0" defaultValue="0"/>
+        <angley val="0" defaultValue="0"/>
+        <anglez val="0" defaultValue="0"/>
+       </rotation>
+       <angle val="0" defaultValue="0"/>
+       <skew val="0" defaultValue="0"/>
+       <pivot>
+        <x val="0" defaultValue="0"/>
+        <y val="0" defaultValue="0"/>
+        <z val="0" defaultValue="0"/>
+       </pivot>
+       <splineOffset>
+        <x val="0" defaultValue="0"/>
+        <y val="0" defaultValue="0"/>
+        <z val="0" defaultValue="0"/>
+       </splineOffset>
+       <ignoreParentPegScaling val="false"/>
+       <disableFieldRendering val="false"/>
+       <depth val="0"/>
+       <enableMinMaxAngle val="false"/>
+       <minAngle val="-360" defaultValue="-360"/>
+       <maxAngle val="360" defaultValue="360"/>
+       <nailForChildren val="false"/>
+       <ikHoldOrientation val="false"/>
+       <ikHoldX val="false"/>
+       <ikHoldY val="false"/>
+       <ikExcluded val="false"/>
+       <ikCanRotate val="true"/>
+       <ikCanTranslateX val="false"/>
+       <ikCanTranslateY val="false"/>
+       <ikBoneX val="0.20000000000000001" defaultValue="0.20000000000000001"/>
+       <ikBoneY val="0" defaultValue="0"/>
+       <ikStiffness val="1" defaultValue="1"/>
+       <drawing>
+        <elementMode val="true"/>
+        <element col="ATV-09A4CCFAE610150D">
+         <layer/>
+        </element>
+        <customName>
+         <name/>
+         <extension val="tga"/>
+         <fieldChart val="12" defaultValue="12"/>
+        </customName>
+       </drawing>
+       <readOverlay val="true"/>
+       <readLineArt val="false"/>
+       <readColorArt val="false"/>
+       <readUnderlay val="true"/>
+       <overlayArtDrawingMode val="VectorDrawingMode"/>
+       <lineArtDrawingMode val="VectorDrawingMode"/>
+       <colorArtDrawingMode val="VectorDrawingMode"/>
+       <underlayArtDrawingMode val="VectorDrawingMode"/>
+       <pencilLineDeformationPreserveThickness val="false"/>
+       <pencilLineDeformationQuality val="Low"/>
+       <pencilLineDeformationSmooth val="1"/>
+       <pencilLineDeformationFitError val="3" defaultValue="3"/>
+       <readColor val="true"/>
+       <readTransparency val="true"/>
+       <colorTransformation val="Linear"/>
+       <applyMatteToColor val="W"/>
+       <enableLineTexture val="true"/>
+       <antialiasingQuality val="HIGH"/>
+       <antialiasingExponent val="1" defaultValue="1"/>
+       <opacity val="100" defaultValue="100"/>
+       <textureFilter val="NEAREST_FILTERED"/>
+       <adjustPencilThickness val="false"/>
+       <normalLineArtThickness val="true"/>
+       <zoomIndependentLineArtThickness val="true"/>
+       <multLineArtThickness val="1" defaultValue="1"/>
+       <addLineArtThickness val="0" defaultValue="0"/>
+       <minLineArtThickness val="0" defaultValue="0"/>
+       <maxLineArtThickness val="0" defaultValue="0"/>
+       <useDrawingPivot val="APPLY_ON_READ_TRANSFORM"/>
+       <flipHor val="false"/>
+       <flipVert val="false"/>
+       <turnBeforeAlignment val="false"/>
+       <noClipping val="false"/>
+       <xClipFactor val="0"/>
+       <yClipFactor val="0"/>
+       <alignmentRule val="ASIS"/>
+       <morphingVelo val="0" defaultValue="0"/>
+       <canAnimate val="false"/>
+      </attrs>
+     </module>
+    </nodeslist>
+    <linkedlist>
+     <link out="Shotgun_Engine" in="Shotgun_Banner" inport="0"/>
+     <link out="Shotgun_Banner" in="Display"/>
+    </linkedlist>
+   </rootgroup>
+   <metas>
+    <meta type="guideList" name="guideList" creator="Harmony Premium" version="1.0">
+     <guideList selectedGuide="-1"/>
+    </meta>
+    <meta type="string" name="Shotgun Toolkit Engine" creator="Harmony Premium" version="1.0">
+     <string value="Startup template"/>
+    </meta>
+   </metas>
+  </scene>
+ </scenes>
+ <symbols>
+  <folder name="Symbols">
+   <scene id="09a3701060100c0b"/>
+  </folder>
+ </symbols>
+ <timeline>
+  <scene id="09a3701060100c0b"/>
+ </timeline>
+</project>
