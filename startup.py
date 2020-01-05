@@ -269,15 +269,16 @@ class HarmonyLauncher(SoftwareLauncher):
         scripts_path = scripts_path_for_exec(exec_path)
         self.logger.debug("Searching for scripts here: %s" % scripts_path)
 
-        if scripts_path is None or not os.path.exists(scripts_path):
-            message = (
-                "Could not find the scripts path for executable: %s\n"
-                "Have you run the application at least once to create"
-                " it's preferences?" % exec_path
-            )
+        if scripts_path is None:
+            message = ("Could not find the scripts path for "
+                       "executable: %s\n" % exec_path)
             raise TankEngineInitError(message)
 
         user_scripts_path = os.path.join(scripts_path, "packages")
+
+        # create scripts folder if it does not exist already
+        if not os.path.exists(user_scripts_path):
+            os.makedirs(user_scripts_path)
 
         xtage = os.path.join(
             self.disk_location,
