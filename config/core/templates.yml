@@ -15,15 +15,6 @@
 # THIS FILE BY ITSELF WILL NOT WORK 
 # These are the additions to the template.yml to get the engine up
 # and running with the default tk-apps
-keys:
-    texture_extension:
-        type: str
-        alias: extension
-
-    texture_name:
-        type: str
-
-
 paths:
     #
     # Harmony
