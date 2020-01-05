@@ -1419,10 +1419,11 @@ function Shotgun()
     // Has Harmony be opened through the Shotgun Launcher ?
     var engine = System.getenv("SGTK_ENGINE");
     var context = System.getenv("SGTK_CONTEXT");
-    if (engine == null || context == null)
+    if (engine == "" || context == "")
     {
-        MessageLog.trace("Not under a Shotgun Desktop environment. Skipped");
-        return;
+        var message = "Harmony has not been run from within the Shotgun Desktop Launcher.\n\nNot under a Shotgun Desktop environment.\n";
+        MessageLog.trace(message);
+        return false;
     }
 
     MessageLog.trace("Shotgun engine...");
@@ -1459,11 +1460,20 @@ function Shotgun()
         }
     }
     MessageLog.trace("Shotgun engine...Done")
+    return true;
 }
 
 function ShotgunMenu()
 {
-    Shotgun();
+    var initialized = Shotgun();
+
+    if (!initialized)
+    {
+        var message = "Harmony has not been run from the Shotgun within Desktop Launcher.\n\nNot under a Shotgun Desktop environment.\n";
+        MessageBox.information(message, 0,0,0 , "Shotgun Harmony Engine")
+        return;
+    }
+
     var app = QCoreApplication.instance();
     var engine = app.shotgun_engine;
 
