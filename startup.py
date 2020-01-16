@@ -108,7 +108,7 @@ def scripts_path_for_exec(exec_path):
 
     if exec_info_match:
         exec_info = exec_info_match.groupdict()
-        exec_info["scripts_version"] = exec_info.get("version").replace(".", "")
+        exec_info["scripts_version"] = exec_info.get("version").split(".")[0].ljust(4, "0")
 
         if platform.system() == "Windows":
             path_root = os.path.expandvars("%APPDATA%")
