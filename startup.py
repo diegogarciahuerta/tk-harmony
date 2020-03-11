@@ -95,9 +95,8 @@ def copytree_multi(src, dst, symlinks=False, ignore=None):
 
 
 def scripts_path_for_exec(exec_path):
-    version_output_regex = (
-        "(?P<company>Toon Boom) (?P<product>\w+) (?P<edition>\w+)\r\n"
-        "(?P=product) (?P=edition) \((?P=product) *(?P=edition)(.exe)*\) version (?P<version>\d*\.*\d*\.*\d*) build (?P<build>\d*) (?P<build_date>.*)"
+    version_output_regex = ("(?P<company>Toon Boom) (?P<product>\w+) (?P<edition>\w+)\r\n"
+        "(?P=product) (?P=edition) \((?P=product) *(?P=edition)(.exe)*\) version (?P<major_version>\d*)\.*(?P<minor_version>\d*)\.*(?P<build_version>\d*) build (?P<build>\d*) (?P<build_date>.*)"
     )
     exec_version = subprocess.check_output(
         [exec_path, "-v"], stderr=subprocess.STDOUT
@@ -108,7 +107,7 @@ def scripts_path_for_exec(exec_path):
 
     if exec_info_match:
         exec_info = exec_info_match.groupdict()
-        exec_info["scripts_version"] = exec_info.get("version").replace(".", "")
+        exec_info["scripts_version"] = "%s00" % exec_info.get("major_version")
 
         if platform.system() == "Windows":
             path_root = os.path.expandvars("%APPDATA%")
@@ -267,6 +266,7 @@ class HarmonyLauncher(SoftwareLauncher):
 
         # ensure scripts are up to date on the dccc side
         scripts_path = scripts_path_for_exec(exec_path)
+        self.logger.debug("Executable path: %s" % exec_path)
         self.logger.debug("Searching for scripts here: %s" % scripts_path)
 
         if scripts_path is None:
