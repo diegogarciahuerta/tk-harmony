@@ -94,38 +94,6 @@ def copytree_multi(src, dst, symlinks=False, ignore=None):
         raise shutil.Error(errors)
 
 
-def scripts_path_for_exec(exec_path):
-    version_output_regex = ("(?P<company>Toon Boom) (?P<product>\w+) (?P<edition>\w+)\r\n"
-        "(?P=product) (?P=edition) \((?P=product) *(?P=edition)(.exe)*\) version (?P<major_version>\d*)\.*(?P<minor_version>\d*)\.*(?P<build_version>\d*) build (?P<build>\d*) (?P<build_date>.*)"
-    )
-    exec_version = subprocess.check_output(
-        [exec_path, "-v"], stderr=subprocess.STDOUT
-    )
-
-    scripts_path = None
-    exec_info_match = re.match(version_output_regex, exec_version, re.MULTILINE)
-
-    if exec_info_match:
-        exec_info = exec_info_match.groupdict()
-        exec_info["scripts_version"] = "%s00" % exec_info.get("major_version")
-
-        if platform.system() == "Windows":
-            path_root = os.path.expandvars("%APPDATA%")
-        elif platform.system() == "Linux":
-            path_root = os.path.expandvars("~")
-        elif platform.system() == "Darwin":
-            path_root = os.path.expandvars("~/Library/Preferences")
-
-        if path_root:
-            scripts_path = os.path.join(
-                path_root,
-                "%(company)s Animation" % exec_info,
-                "%(company)s %(product)s %(edition)s" % exec_info,
-                "%(scripts_version)s-scripts" % exec_info,
-            )
-    return scripts_path
-
-
 def ensure_scripts_up_to_date(engine_scripts_path, scripts_folder):
     logger.info("Updating scripts...: %s" % engine_scripts_path)
     logger.info("                     scripts_folder: %s" % scripts_folder)
@@ -156,14 +124,19 @@ class HarmonyLauncher(SoftwareLauncher):
     # strings, these allow us to alter the regex matching for any of the
     # variable components of the path in one place.
 
-    # It seems that Harmony does not use any version number in the
-    # installation folders, as if they do not support multiple versions of
-    # the same software.
+    # It seems that fields cannot be repeated in multiple places of the same
+    # template, therefore the duplication of regex components:
     COMPONENT_REGEX_LOOKUP = {
         "version": r"\d\d\.*\d*",
         "platform": r" \(x86\)",
-        "editiondir": r"\w+",
-        "edition": r"\w+",
+        "edition00": r"\w+",
+        "edition01": r"\w+",
+        "edition02": r"\w+",
+        "company00": r"Toon Boom|ToonBoom",
+        "company01": r"Toon Boom|ToonBoom",
+        "product00": r"Harmony|harmony",
+        "product01": r"Harmony|harmony",
+        "product02": r"Harmony|harmony",
     }
 
     # This dictionary defines a list of executable template strings for each
@@ -172,15 +145,16 @@ class HarmonyLauncher(SoftwareLauncher):
     # with an appropriate glob or regex string.
 
     EXECUTABLE_TEMPLATES = {
-        "Windows": [
-            "C:\\Program Files{platform}\\Toon Boom Animation\\Toon Boom Harmony {version} {editiondir}\\win64\\bin\\Harmony{edition}.exe"
+        "win32": [
+            "C:\\Program Files{platform}\\{company00} Animation\\{company01} {product00} {version} {edition00}\\win64\\bin\\{product01}{edition01}.exe"
         ],
-        "Linux": [
-            "/usr/local/ToonBoomAnimation/harmony{editiondir}_{version}/lnx86_64/bin/Harmony{edition}",
-            "/opt/ToonBoomAnimation/harmony{editiondir}_{version}/lnx86_64/bin/Harmony{edition}",
+        "linux": [
+            "/usr/local/{company00}Animation/{product00}{edition00}_{version}/lnx86_64/bin/{product01}{edition01}",
+            "/opt/{company00}Animation/{product00}{edition00}_{version}/lnx86_64/bin/{product01}{edition01}",
         ],
-        "Darwin": [
-            "/Applications/Toon Boom Harmony {version} {editiondir}/Harmony {edition}.app/Contents/MacOS/Harmony {edition}"
+        "darwin": [
+            "/Applications/{company00} {product00} {version} {edition00}/{product01} {edition01}.app/Contents/MacOS/{product02} {edition02}",
+            "/Applications/{company00} {product00} {version} {edition00}/{product01} {edition01}.app/Contents/tba/macosx/bin/{product02} {edition02}",
         ],
     }
 
@@ -204,9 +178,7 @@ class HarmonyLauncher(SoftwareLauncher):
         """
         required_env = {}
 
-        resources_packages_path = os.path.join(
-            self.disk_location, "resources", "packages"
-        )
+        resources_packages_path = os.path.join(self.disk_location, "resources", "packages")
 
         startup_js_path = os.path.join(
             self.disk_location, "resources", "startup", "bootstrap.js"
@@ -214,45 +186,33 @@ class HarmonyLauncher(SoftwareLauncher):
 
         # Run the engine's init.py file when Harmony starts up
         # TODO, maybe start engine here
-        startup_path = os.path.join(
-            self.disk_location, "startup", "bootstrap.py"
-        )
+        startup_path = os.path.join(self.disk_location, "startup", "bootstrap.py")
 
         # Prepare the launch environment with variables required by the
         # classic bootstrap approach.
-        self.logger.debug(
-            "Preparing Harmony Launch via Toolkit Classic methodology ..."
-        )
+        self.logger.debug("Preparing Harmony Launch via Toolkit Classic methodology ...")
 
         required_env["SGTK_HARMONY_EXEC_PATH"] = exec_path.replace("\\", "/")
 
-        required_env["SGTK_HARMONY_ENGINE_STARTUP"] = startup_path.replace(
-            "\\", "/"
-        )
+        required_env["SGTK_HARMONY_ENGINE_STARTUP"] = startup_path.replace("\\", "/")
 
-        required_env[
-            "SGTK_HARMONY_ENGINE_JS_STARTUP"
-        ] = startup_js_path.replace("\\", "/")
+        required_env["SGTK_HARMONY_ENGINE_JS_STARTUP"] = startup_js_path.replace("\\", "/")
 
-        required_env["SGTK_HARMONY_ENGINE_PYTHON"] = sys.executable.replace(
-            "\\", "/"
-        )
+        required_env["SGTK_HARMONY_ENGINE_PYTHON"] = sys.executable.replace("\\", "/")
 
         resources_path = os.path.join(DIR_PATH, "resources")
-        required_env[
-            "SGTK_HARMONY_ENGINE_RESOURCES_PATH"
-        ] = resources_path.replace("\\", "/")
+        required_env["SGTK_HARMONY_ENGINE_RESOURCES_PATH"] = resources_path.replace("\\", "/")
 
         newfile_template_path = os.path.join(
             resources_path, "templates", "newfile", "template.xstage"
         )
-        required_env[
-            "SGTK_HARMONY_NEWFILE_TEMPLATE"
-        ] = newfile_template_path.replace("\\", "/")
+        required_env["SGTK_HARMONY_NEWFILE_TEMPLATE"] = newfile_template_path.replace(
+            "\\", "/"
+        )
 
-        required_env[
-            "SGTK_HARMONY_MODULE_PATH"
-        ] = sgtk.get_sgtk_module_path().replace("\\", "/")
+        required_env["SGTK_HARMONY_MODULE_PATH"] = sgtk.get_sgtk_module_path().replace(
+            "\\", "/"
+        )
 
         required_env["SGTK_HARMONY_ENGINE_HOST"] = "127.0.0.1"
         required_env["SGTK_HARMONY_ENGINE_PORT"] = str(get_free_port())
@@ -265,13 +225,12 @@ class HarmonyLauncher(SoftwareLauncher):
         required_env["SGTK_CONTEXT"] = sgtk.context.serialize(self.context)
 
         # ensure scripts are up to date on the dccc side
-        scripts_path = scripts_path_for_exec(exec_path)
+        scripts_path = self._find_scripts_path(exec_path)
         self.logger.debug("Executable path: %s" % exec_path)
         self.logger.debug("Searching for scripts here: %s" % scripts_path)
 
         if scripts_path is None:
-            message = ("Could not find the scripts path for "
-                       "executable: %s\n" % exec_path)
+            message = "Could not find the scripts path for " "executable: %s\n" % exec_path
             raise TankEngineInitError(message)
 
         user_scripts_path = os.path.join(scripts_path, "packages")
@@ -281,11 +240,7 @@ class HarmonyLauncher(SoftwareLauncher):
             os.makedirs(user_scripts_path)
 
         xtage = os.path.join(
-            self.disk_location,
-            "resources",
-            "templates",
-            "startup",
-            "template.xstage",
+            self.disk_location, "resources", "templates", "startup", "template.xstage"
         )
         required_env["SGTK_HARMONY_STARTUP_TEMPLATE"] = xtage.replace("\\", "/")
 
@@ -297,6 +252,12 @@ class HarmonyLauncher(SoftwareLauncher):
         ensure_scripts_up_to_date(resources_packages_path, user_scripts_path)
 
         return LaunchInformation(exec_path, args, required_env)
+
+    def _icon_from_software_path(self, path, edition):
+        software_icon = os.path.join(
+            os.path.dirname(path), "..", "..", "resources", "icons", "harmony%s.png" % edition
+        )
+        return software_icon
 
     def _icon_from_engine(self):
         """
@@ -325,11 +286,52 @@ class HarmonyLauncher(SoftwareLauncher):
                 supported_sw_versions.append(sw_version)
             else:
                 self.logger.debug(
-                    "SoftwareVersion %s is not supported: %s"
-                    % (sw_version, reason)
+                    "SoftwareVersion %s is not supported: %s" % (sw_version, reason)
                 )
 
         return supported_sw_versions
+
+    def _find_scripts_path(self, executable_path):
+        """
+        Find the scripts folder where to put the Harmony scripts for the engine.
+        """
+        scripts_path = None
+
+        executable_templates = self.EXECUTABLE_TEMPLATES.get(
+            "darwin"
+            if sgtk.util.is_macos()
+            else "win32"
+            if sgtk.util.is_windows()
+            else "linux"
+            if sgtk.util.is_linux()
+            else []
+        )
+
+        for executable_template in executable_templates:
+            executable_matches = self._glob_and_match(
+                executable_template, self.COMPONENT_REGEX_LOOKUP
+            )
+            for (path, key_dict) in executable_matches:
+                if executable_path == path:
+                    if sgtk.util.is_windows():
+                        path_root = os.path.expandvars("%APPDATA%")
+                    elif sgtk.util.is_linux():
+                        path_root = os.path.expandvars("~")
+                    elif sgtk.util.is_macos():
+                        path_root = os.path.expandvars("~/Library/Preferences")
+
+                    if path_root:
+                        scripts_version = "%s00" % key_dict["version"].split(".")[0]
+
+                        scripts_path = os.path.join(
+                            path_root,
+                            "%(company00)s Animation" % key_dict,
+                            "%(company00)s %(product00)s %(edition00)s" % key_dict,
+                            "%s-scripts" % scripts_version,
+                        )
+                        break
+
+        return scripts_path
 
     def _find_software(self):
         """
@@ -337,8 +339,15 @@ class HarmonyLauncher(SoftwareLauncher):
         """
 
         # all the executable templates for the current OS
-        platform_os = platform.system()
-        executable_templates = self.EXECUTABLE_TEMPLATES.get(platform_os, [])
+        executable_templates = self.EXECUTABLE_TEMPLATES.get(
+            "darwin"
+            if sgtk.util.is_macos()
+            else "win32"
+            if sgtk.util.is_windows()
+            else "linux"
+            if sgtk.util.is_linux()
+            else []
+        )
 
         # all the discovered executables
         sw_versions = []
@@ -357,18 +366,20 @@ class HarmonyLauncher(SoftwareLauncher):
                 # extract the matched keys form the key_dict (default to None
                 # if not included)
                 executable_version = key_dict.get("version", None)
-                executable_edition = key_dict.get("edition", "")
+                executable_edition = key_dict.get("edition00", "")
                 self.logger.debug(
-                    "Software found: %s | %s.",
-                    executable_version,
-                    executable_template,
+                    "Software found: %s | %s.", executable_version, executable_template
                 )
+                icon_path = self._icon_from_software_path(executable_path, executable_edition)
+                if not icon_path:
+                    icon_path = self._icon_from_engine()
+
                 sw_versions.append(
                     SoftwareVersion(
                         executable_version,
                         "Harmony %s" % executable_edition,
                         executable_path,
-                        self._icon_from_engine(),
+                        icon_path,
                     )
                 )
 
