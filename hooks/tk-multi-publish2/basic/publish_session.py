@@ -46,9 +46,7 @@ class HarmonySessionPublishPlugin(HookBaseClass):
         contain simple html for formatting.
         """
 
-        loader_url = (
-            "https://support.shotgunsoftware.com/hc/en-us/articles/219033078"
-        )
+        loader_url = "https://support.shotgunsoftware.com/hc/en-us/articles/219033078"
 
         return """
         Publishes the file to Shotgun. A <b>Publish</b> entry will be
@@ -121,9 +119,7 @@ class HarmonySessionPublishPlugin(HookBaseClass):
         # inherit the settings from the base publish plugin
         base_settings = super(HarmonySessionPublishPlugin, self).settings or {}
 
-        base_settings["File Types"]["default"].append(
-            ["Harmony Project File", "xstage"]
-        )
+        base_settings["File Types"]["default"].append(["Harmony Project File", "xstage"])
 
         # settings specific to this class
         harmony_publish_settings = {
@@ -191,13 +187,10 @@ class HarmonySessionPublishPlugin(HookBaseClass):
             # provide a save button. the session will need to be saved before
             # validation will succeed.
             self.logger.warn(
-                "The Harmony session has not been saved.",
-                extra=_get_save_as_action(),
+                "The Harmony session has not been saved.", extra=_get_save_as_action()
             )
 
-        self.logger.info(
-            "Harmony '%s' plugin accepted the current session." % (self.name,)
-        )
+        self.logger.info("Harmony '%s' plugin accepted the current session." % (self.name,))
         return {"accepted": True, "checked": True}
 
     def validate(self, settings, item):
@@ -238,22 +231,18 @@ class HarmonySessionPublishPlugin(HookBaseClass):
         if work_template:
             if not work_template.validate(path):
                 self.logger.warning(
-                    "The current session does not match the configured work "
-                    "file template.",
+                    "The current session does not match the configured work " "file template.",
                     extra={
                         "action_button": {
                             "label": "Save File",
-                            "tooltip": "Save the current session to a "
-                            "different file name",
+                            "tooltip": "Save the current session to a " "different file name",
                             # will launch wf2 if configured
                             "callback": _get_save_as_action(),
                         }
                     },
                 )
             else:
-                self.logger.debug(
-                    "Work template configured and matches session file."
-                )
+                self.logger.debug("Work template configured and matches session file.")
         else:
             self.logger.debug("No work template configured.")
 
@@ -331,9 +320,7 @@ class HarmonySessionPublishPlugin(HookBaseClass):
 
         # let the base class register the publish
         super(HarmonySessionPublishPlugin, self).publish(settings, item)
-        item.properties.sg_publish_path = item.properties.sg_publish_data[
-            "path"
-        ]["local_path"]
+        item.properties.sg_publish_path = item.properties.sg_publish_data["path"]["local_path"]
 
     def finalize(self, settings, item):
         """
@@ -381,8 +368,7 @@ class HarmonySessionPublishPlugin(HookBaseClass):
         work_template = item.properties.get("work_template")
         if not work_template:
             self.logger.debug(
-                "No work template set on the item. "
-                "Skipping copy file to publish location."
+                "No work template set on the item. " "Skipping copy file to publish location."
             )
             return
 

@@ -34,9 +34,7 @@ class HarmonyStartVersionControlPlugin(HookBaseClass):
         """
 
         # look for icon one level up from this hook's folder in "icons" folder
-        return os.path.join(
-            self.disk_location, os.pardir, "icons", "version_up.png"
-        )
+        return os.path.join(self.disk_location, os.pardir, "icons", "version_up.png")
 
     @property
     def name(self):
@@ -131,12 +129,9 @@ class HarmonyStartVersionControlPlugin(HookBaseClass):
             version_number = self._get_version_number(path, item)
             if version_number is not None:
                 self.logger.info(
-                    "Harmony '%s' plugin rejected the current session..."
-                    % (self.name,)
+                    "Harmony '%s' plugin rejected the current session..." % (self.name,)
                 )
-                self.logger.info(
-                    "  There is already a version number in the file..."
-                )
+                self.logger.info("  There is already a version number in the file...")
                 self.logger.info("  Harmony file path: %s" % (path,))
                 return {"accepted": False}
         else:
@@ -144,8 +139,7 @@ class HarmonyStartVersionControlPlugin(HookBaseClass):
             # provide a save button. the session will need to be saved before
             # validation will succeed.
             self.logger.warn(
-                "The Harmony session has not been saved.",
-                extra=_get_save_as_action(),
+                "The Harmony session has not been saved.", extra=_get_save_as_action()
             )
 
         self.logger.info(
@@ -191,8 +185,7 @@ class HarmonyStartVersionControlPlugin(HookBaseClass):
         version_path = publisher.util.get_version_path(path, "v001")
         if os.path.exists(version_path):
             error_msg = (
-                "A file already exists with a version number. Please "
-                "choose another name."
+                "A file already exists with a version number. Please " "choose another name."
             )
             self.logger.error(error_msg, extra=_get_save_as_action())
             raise Exception(error_msg)
@@ -223,9 +216,7 @@ class HarmonyStartVersionControlPlugin(HookBaseClass):
 
         # save to the new version path
         _save_session(version_path)
-        self.logger.info(
-            "A version number has been added to the Harmony file..."
-        )
+        self.logger.info("A version number has been added to the Harmony file...")
         self.logger.info("  Harmony file path: %s" % (version_path,))
 
     def finalize(self, settings, item):
@@ -262,23 +253,17 @@ class HarmonyStartVersionControlPlugin(HookBaseClass):
         work_template = item.properties.get("work_template")
         if work_template:
             if work_template.validate(path):
-                self.logger.debug(
-                    "Using work template to determine version number."
-                )
+                self.logger.debug("Using work template to determine version number.")
                 work_fields = work_template.get_fields(path)
                 if "version" in work_fields:
                     version_number = work_fields.get("version")
             else:
                 self.logger.debug("Work template did not match path")
         else:
-            self.logger.debug(
-                "Work template unavailable for version extraction."
-            )
+            self.logger.debug("Work template unavailable for version extraction.")
 
         if version_number is None:
-            self.logger.debug(
-                "Using path info hook to determine version number."
-            )
+            self.logger.debug("Using path info hook to determine version number.")
             version_number = publisher.util.get_version_number(path)
 
         return version_number

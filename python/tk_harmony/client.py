@@ -87,8 +87,7 @@ class QTcpSocketClient(QtCore.QObject):
 
         if self.is_connected():
             logger.warning(
-                "Connection already existed , removing connection to %s %s "
-                % (host, port)
+                "Connection already existed , removing connection to %s %s " % (host, port)
             )
             self.connection.abort()
 
@@ -97,9 +96,7 @@ class QTcpSocketClient(QtCore.QObject):
 
         if not self.connection.waitForConnected(1500):
             et2 = time.time()
-            logger.error(
-                "Error connecting to the server | %s secs" % (et2 - st2)
-            )
+            logger.error("Error connecting to the server | %s secs" % (et2 - st2))
             return self.connection_status()
         else:
             et2 = time.time()
@@ -157,9 +154,7 @@ class QTcpSocketClient(QtCore.QObject):
         self.connection.write(block)
 
         if not self.connection.waitForBytesWritten(MAX_WRITE_RESPONSE_TIME):
-            logger.error(
-                "Could not write to socket: %s" % self.connection.errorString()
-            )
+            logger.error("Could not write to socket: %s" % self.connection.errorString())
         else:
             logger.debug("Sent data ok. %s" % self.connection.state())
 
@@ -175,12 +170,8 @@ class QTcpSocketClient(QtCore.QObject):
 
         i = 0
         while self.connection.bytesAvailable() > 0:
-            if (
-                self._block_size == 0
-                and self.connection.bytesAvailable() >= INT32_SIZE
-            ) or (
-                self._block_size > 0
-                and self.connection.bytesAvailable() >= self._block_size
+            if (self._block_size == 0 and self.connection.bytesAvailable() >= INT32_SIZE) or (
+                self._block_size > 0 and self.connection.bytesAvailable() >= self._block_size
             ):
                 self._block_size = stream.readInt32()
                 # logger.debug(
@@ -188,10 +179,7 @@ class QTcpSocketClient(QtCore.QObject):
                 #     % (i, self._block_size)
                 # )
 
-            if (
-                self._block_size > 0
-                and self.connection.bytesAvailable() >= self._block_size
-            ):
+            if self._block_size > 0 and self.connection.bytesAvailable() >= self._block_size:
                 data = stream.readRawData(self._block_size)
                 request = QtCore.QTextCodec.codecForMib(106).toUnicode(data)
                 # logger.debug("About to process request %s in queue: %s" % (i, request))
@@ -217,12 +205,7 @@ class QTcpSocketClient(QtCore.QObject):
 
     def _prepare_reply(self, request_id, result):
         reply = json.dumps(
-            {
-                "jsonrpc": "2.0",
-                "result": result,
-                "request_return": False,
-                "id": request_id,
-            }
+            {"jsonrpc": "2.0", "result": result, "request_return": False, "id": request_id}
         )
         return request_id, reply
 
@@ -258,22 +241,17 @@ class QTcpSocketClient(QtCore.QObject):
             else:
                 logger.warning("Command not recognized: %s. Skipping." % method)
         elif "error" in command:
-            logger.error(
-                "Error occurred when requesting command. %s" % command["error"]
-            )
+            logger.error("Error occurred when requesting command. %s" % command["error"])
         else:
             logger.debug(
-                "Not a command, and not a message we were waiting answer for. %s"
-                % request_id
+                "Not a command, and not a message we were waiting answer for. %s" % request_id
             )
 
     def send_and_receive_command(self, method, **kwargs):
         QtGui.QApplication.processEvents()
 
         st = time.time()
-        request_id, request = self._prepare_request(
-            method, request_return=True, **kwargs
-        )
+        request_id, request = self._prepare_request(method, request_return=True, **kwargs)
         self._send(request)
         st1 = time.time()
 
@@ -291,10 +269,7 @@ class QTcpSocketClient(QtCore.QObject):
             self._receiving = False
             et3 = time.time()
             result = self.responses.get(request_id)
-            logger.debug(
-                "Received command. in %s secs | Result: %s"
-                % ((et3 - st3), result)
-            )
+            logger.debug("Received command. in %s secs | Result: %s" % ((et3 - st3), result))
         else:
             logger.warning("Did not receive any data.")
 
@@ -323,16 +298,12 @@ class QTcpSocketClient(QtCore.QObject):
             logger.error("Host closed the connection...")
         elif socketError == QtNetwork.QAbstractSocket.HostNotFoundError:
             logger.error(
-                "The host was not found. Please check the host name and "
-                "port settings."
+                "The host was not found. Please check the host name and " "port settings."
             )
         elif socketError == QtNetwork.QAbstractSocket.ConnectionRefusedError:
             logger.error("The server is not up and running yet.")
         else:
-            logger.error(
-                "The following error occurred: %s."
-                % self.connection.errorString()
-            )
+            logger.error("The following error occurred: %s." % self.connection.errorString())
 
     def close(self):
         self.connection.abort()
@@ -373,12 +344,8 @@ class Client(QtGui.QDialog):
 
         buttonBox = QtGui.QDialogButtonBox()
 
-        buttonBox.addButton(
-            self.connectButton, QtGui.QDialogButtonBox.ActionRole
-        )
-        buttonBox.addButton(
-            self.sendCommandButton, QtGui.QDialogButtonBox.ActionRole
-        )
+        buttonBox.addButton(self.connectButton, QtGui.QDialogButtonBox.ActionRole)
+        buttonBox.addButton(self.sendCommandButton, QtGui.QDialogButtonBox.ActionRole)
         buttonBox.addButton(quitButton, QtGui.QDialogButtonBox.RejectRole)
 
         self.hostLineEdit.textChanged.connect(self.enablesendCommandButton)
@@ -415,18 +382,14 @@ class Client(QtGui.QDialog):
         return "PONG"
 
     def show_menu(self, clickedPosition):
-        logger.debug(
-            "Client | Request for SHOW MENU received!: %s" % clickedPosition
-        )
+        logger.debug("Client | Request for SHOW MENU received!: %s" % clickedPosition)
 
     def connect_to_host(self):
         self.client.close()
         self.client.register_callback("PING", self.ping)
         self.client.register_callback("SHOW_MENU", self.show_menu)
 
-        self.client.connect_to_host(
-            self.hostLineEdit.text(), int(self.portLineEdit.text())
-        )
+        self.client.connect_to_host(self.hostLineEdit.text(), int(self.portLineEdit.text()))
 
         self.sendCommandButton.setEnabled(True)
         commands = self.client.send_and_receive_command("DIR")

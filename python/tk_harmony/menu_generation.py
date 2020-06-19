@@ -49,11 +49,7 @@ class MenuGenerator(object):
         self.menu_handle.hide()
 
     def show(self, pos=None):
-        pos = (
-            QtGui.QCursor.pos()
-            if pos is None
-            else QtCore.QPoint(pos[0], pos[1])
-        )
+        pos = QtGui.QCursor.pos() if pos is None else QtCore.QPoint(pos[0], pos[1])
 
         qApp = QtGui.QApplication.instance()
 
@@ -97,10 +93,7 @@ class MenuGenerator(object):
 
             # scan through all menu items
             for cmd in menu_items:
-                if (
-                    cmd.get_app_instance_name() == app_instance_name
-                    and cmd.name == menu_name
-                ):
+                if cmd.get_app_instance_name() == app_instance_name and cmd.name == menu_name:
                     # found our match!
                     cmd.add_command_to_menu(self.menu_handle)
                     # mark as a favourite item
@@ -135,9 +128,7 @@ class MenuGenerator(object):
         self._add_divider(self.menu_handle)
 
         # add menu divider
-        self._add_menu_item(
-            "-- Exit Menu --", self.menu_handle, self.menu_handle.hide
-        )
+        self._add_menu_item("-- Exit Menu --", self.menu_handle, self.menu_handle.hide)
 
     def _add_divider(self, parent_menu):
         divider = QtGui.QAction(parent_menu)
@@ -184,9 +175,7 @@ class MenuGenerator(object):
 
         # Add the menu item only when there are some file system locations.
         if ctx.filesystem_locations:
-            self._add_menu_item(
-                "Jump to File System", ctx_menu, self._jump_to_fs
-            )
+            self._add_menu_item("Jump to File System", ctx_menu, self._jump_to_fs)
 
         # divider (apps may register entries below this divider)
         self._add_divider(ctx_menu)
@@ -299,9 +288,7 @@ class AppCommand(object):
             app = self.properties["app"]
             doc_url = app.documentation_url
             if doc_url.__class__ == unicode:
-                doc_url = unicodedata.normalize("NFKD", doc_url).encode(
-                    "ascii", "ignore"
-                )
+                doc_url = unicodedata.normalize("NFKD", doc_url).encode("ascii", "ignore")
             return doc_url
 
         return None
@@ -332,9 +319,7 @@ class AppCommand(object):
                 parent_menu = self.parent._add_sub_menu(item_label, parent_menu)
 
         # self._execute_deferred)
-        self.parent._add_menu_item(
-            parts[-1], parent_menu, self.callback, self.properties
-        )
+        self.parent._add_menu_item(parts[-1], parent_menu, self.callback, self.properties)
 
     def _find_sub_menu_item(self, menu, label):
         """

@@ -26,9 +26,7 @@ class Application(QTcpSocketClient):
     def connect(self):
         while not self.is_connected():
             self.connect_to_host()
-            self.engine.logger.debug(
-                "Waiting for server: %s" % self.connection_status()
-            )
+            self.engine.logger.debug("Waiting for server: %s" % self.connection_status())
 
     def broadcast_event(self, event_name):
         self.send_command(event_name)
@@ -100,15 +98,11 @@ class Application(QTcpSocketClient):
         return result
 
     def execute(self, statement_str):
-        result = self.send_and_receive_command(
-            "EXECUTE_STATEMENT", statement=statement_str
-        )
+        result = self.send_and_receive_command("EXECUTE_STATEMENT", statement=statement_str)
         return result
 
     def extract_thumbnail(self, filename):
-        result = self.send_and_receive_command(
-            "EXTRACT_THUMBNAIL", path=filename
-        )
+        result = self.send_and_receive_command("EXTRACT_THUMBNAIL", path=filename)
         return result
 
     # file management
@@ -127,11 +121,7 @@ class Application(QTcpSocketClient):
         app.log_debug("Needs saving: %s" % needs_saving)
 
         app_settings = sgtk.platform.find_app_settings(
-            app.engine.name,
-            app.name,
-            app.sgtk,
-            context,
-            app.engine.instance_name,
+            app.engine.name, app.name, app.sgtk, context, app.engine.instance_name
         )
 
         settings = None
@@ -142,10 +132,8 @@ class Application(QTcpSocketClient):
 
         if not settings:
             raise TankError(
-                "Could not find the settings for app: %s context: %s"
-                % (app.name, context)
+                "Could not find the settings for app: %s context: %s" % (app.name, context)
             )
-
 
         # check if we have a different template to copy from than the original
         template_project_folder = settings.get("template_project_folder", None)
@@ -185,9 +173,7 @@ class Application(QTcpSocketClient):
                 version += 1
 
         # Harmony saves projects in folders
-        destination_folder, destination_filename = os.path.split(
-            destination_path
-        )
+        destination_folder, destination_filename = os.path.split(destination_path)
         destination_folder = normpath(destination_folder).replace("\\", "/")
         app.log_debug("Destination_folder: %s" % destination_folder)
         app.log_debug("Destination_filename: %s" % destination_filename)
@@ -223,14 +209,10 @@ class Application(QTcpSocketClient):
             source_file = self.get_current_project_path()
 
         source_folder, source_filename = os.path.split(source_file)
-        source_filename_file, source_filename_ext = os.path.splitext(
-            source_filename
-        )
+        source_filename_file, source_filename_ext = os.path.splitext(source_filename)
 
         target_folder, target_filename = os.path.split(target_file)
-        target_filename_file, target_filename_ext = os.path.splitext(
-            target_filename
-        )
+        target_filename_file, target_filename_ext = os.path.splitext(target_filename)
 
         # we need to ignore all the other versions within the
         # folder of this WIP version except for the ones that
@@ -257,9 +239,7 @@ class Application(QTcpSocketClient):
             rename_files[source_filename] = target_filename
 
         if source_filename_file + ".aux" != target_filename_file + ".aux":
-            rename_files[source_filename_file + ".aux"] = (
-                target_filename_file + ".aux"
-            )
+            rename_files[source_filename_file + ".aux"] = target_filename_file + ".aux"
 
         # copy the folder to target
         # Note that I would happily use shutil.copytree, but we need to rename
@@ -287,8 +267,7 @@ class Application(QTcpSocketClient):
             )
 
         self.engine.logger.debug(
-            "Copied source folder '%s' to folder '%s'."
-            % (source_folder, target_folder)
+            "Copied source folder '%s' to folder '%s'." % (source_folder, target_folder)
         )
 
         if open_project:
@@ -300,9 +279,7 @@ class Application(QTcpSocketClient):
         return result
 
     def set_start_frame(self, start_frame):
-        result = self.send_and_receive_command(
-            "SET_START_FRAME", start_frame=start_frame
-        )
+        result = self.send_and_receive_command("SET_START_FRAME", start_frame=start_frame)
         return result
 
     def get_stop_frame(self):
@@ -310,9 +287,7 @@ class Application(QTcpSocketClient):
         return result
 
     def set_stop_frame(self, stop_frame):
-        result = self.send_and_receive_command(
-            "SET_STOP_FRAME", stop_frame=stop_frame
-        )
+        result = self.send_and_receive_command("SET_STOP_FRAME", stop_frame=stop_frame)
         return result
 
     def get_frame_range(self):
@@ -330,9 +305,7 @@ class Application(QTcpSocketClient):
         return result
 
     def set_frame_count(self, frame_count):
-        result = self.send_and_receive_command(
-            "SET_FRAME_COUNT", frame_count=frame_count
-        )
+        result = self.send_and_receive_command("SET_FRAME_COUNT", frame_count=frame_count)
         return result
 
     # scene editing / management
@@ -357,9 +330,7 @@ class Application(QTcpSocketClient):
         return result
 
     def get_nodes_of_type(self, node_types):
-        result = self.send_and_receive_command(
-            "GET_NODES_OF_TYPE", node_types=node_types
-        )
+        result = self.send_and_receive_command("GET_NODES_OF_TYPE", node_types=node_types)
         return result
 
     def get_node_metadata(self, node, attr_name):
@@ -369,15 +340,11 @@ class Application(QTcpSocketClient):
         return result
 
     def get_scene_metadata(self, attr_name):
-        result = self.send_and_receive_command(
-            "GET_SCENE_METADATA", attr_name=attr_name
-        )
+        result = self.send_and_receive_command("GET_SCENE_METADATA", attr_name=attr_name)
         return result
 
     def get_columns_of_type(self, column_type):
-        result = self.send_and_receive_command(
-            "GET_COLUMNS_OF_TYPE", column_type=column_type
-        )
+        result = self.send_and_receive_command("GET_COLUMNS_OF_TYPE", column_type=column_type)
         return result
 
     def get_sound_column_filenames(self, column_name):

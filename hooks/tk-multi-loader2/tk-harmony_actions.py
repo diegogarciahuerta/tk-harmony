@@ -80,8 +80,7 @@ class HarmonyActions(HookBaseClass):
         app = self.parent
         app.log_debug(
             "Generate actions called for UI element %s. "
-            "Actions: %s. Publish Data: %s"
-            % (ui_area, actions, sg_publish_data)
+            "Actions: %s. Publish Data: %s" % (ui_area, actions, sg_publish_data)
         )
 
         published_file_type = sg_publish_data["published_file_type"]["name"]
@@ -93,8 +92,7 @@ class HarmonyActions(HookBaseClass):
             for action in actions:
                 action_instances.append(
                     {
-                        "name": "Import %s as %s"
-                        % (published_file_type, action.capitalize()),
+                        "name": "Import %s as %s" % (published_file_type, action.capitalize()),
                         "params": {
                             "action": action,
                             "published_file_type": published_file_type,

@@ -89,29 +89,22 @@ class HarmonySessionCollector(HookBaseClass):
         work_template = None
         work_template_setting = settings.get("Work Template")
         if work_template_setting:
-            work_template = publisher.engine.get_template_by_name(
-                work_template_setting.value
-            )
+            work_template = publisher.engine.get_template_by_name(work_template_setting.value)
 
-            self.logger.debug(
-                "Work template defined for Toon Boom Harmony collection."
-            )
+            self.logger.debug("Work template defined for Toon Boom Harmony collection.")
 
         work_export_template = None
         work_export_template_setting = settings.get("Work Export Template")
         if work_export_template_setting:
             self.logger.debug(
-                "Work Export template settings: %s"
-                % work_export_template_setting
+                "Work Export template settings: %s" % work_export_template_setting
             )
 
             work_export_template = publisher.engine.get_template_by_name(
                 work_export_template_setting.value
             )
 
-            self.logger.debug(
-                "Work Export template defined for Toon Boom Harmony collection."
-            )
+            self.logger.debug("Work Export template defined for Toon Boom Harmony collection.")
 
         if work_export_template and work_template:
             path = publisher.engine.app.get_current_project_path()
@@ -150,9 +143,7 @@ class HarmonySessionCollector(HookBaseClass):
         )
 
         # get the icon path to display for this item
-        icon_path = os.path.join(
-            self.disk_location, os.pardir, "icons", "session.png"
-        )
+        icon_path = os.path.join(self.disk_location, os.pardir, "icons", "session.png")
         session_item.set_icon_from_path(icon_path)
 
         # if a work template is defined, add it to the item properties so
@@ -160,9 +151,7 @@ class HarmonySessionCollector(HookBaseClass):
         work_template_setting = settings.get("Work Template")
         if work_template_setting:
 
-            work_template = publisher.engine.get_template_by_name(
-                work_template_setting.value
-            )
+            work_template = publisher.engine.get_template_by_name(work_template_setting.value)
 
             # store the template on the item for use by publish plugins. we
             # can't evaluate the fields here because there's no guarantee the

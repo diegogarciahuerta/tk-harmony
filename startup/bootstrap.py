@@ -81,8 +81,7 @@ def start_toolkit_classic():
     try:
         # Start up the toolkit engine from the environment data
         logger.debug(
-            "Launching engine instance '%s' for context %s"
-            % (env_engine, env_context)
+            "Launching engine instance '%s' for context %s" % (env_engine, env_context)
         )
         engine = sgtk.platform.start_engine(env_engine, context.sgtk, context)
         logger.debug("Current engine '%s'" % sgtk.platform.current_engine())

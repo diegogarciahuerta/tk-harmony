@@ -107,9 +107,7 @@ def refresh_engine(scene_name, prev_context):
         try:
             # could not detect context from path, will use the project context
             # for menus if it exists
-            ctx = engine.sgtk.context_from_entity_dictionary(
-                engine.context.project
-            )
+            ctx = engine.sgtk.context_from_entity_dictionary(engine.context.project)
             message = (
                 "Shotgun Harmony Engine could not detect "
                 "the context\n from the project loaded. "
@@ -182,9 +180,7 @@ class HarmonyEngine(Engine):
             dlg.setIcon(level_icon[level])
             dlg.setText(msg)
             dlg.setWindowTitle("Shotgun Harmony Engine")
-            dlg.setWindowFlags(
-                dlg.windowFlags() | QtCore.Qt.WindowStaysOnTopHint
-            )
+            dlg.setWindowFlags(dlg.windowFlags() | QtCore.Qt.WindowStaysOnTopHint)
             dlg.show()
             dlg.exec_()
 
@@ -229,9 +225,7 @@ class HarmonyEngine(Engine):
         Toggles global debug logging on and off in the log manager.
         This will affect all logging across all of toolkit.
         """
-        self.logger.debug(
-            "calling Harmony with debug: %s" % LogManager().global_debug
-        )
+        self.logger.debug("calling Harmony with debug: %s" % LogManager().global_debug)
 
         # flip debug logging
         LogManager().global_debug = not LogManager().global_debug
@@ -268,9 +262,7 @@ class HarmonyEngine(Engine):
                 {
                     "short_name": "open_log_folder",
                     "icon": icon_path,
-                    "description": (
-                        "Opens the folder where log files are " "being stored."
-                    ),
+                    "description": ("Opens the folder where log files are " "being stored."),
                     "type": "context_menu",
                 },
             )
@@ -382,15 +374,10 @@ class HarmonyEngine(Engine):
                 # split off the major version number - accomodate complex
                 # version strings and decimals:
                 major_version_number_str = app_version_str.split(".")[0]
-                if (
-                    major_version_number_str
-                    and major_version_number_str.isdigit()
-                ):
+                if major_version_number_str and major_version_number_str.isdigit():
                     # check against the compatibility_dialog_min_version
                     # setting
-                    min_ver = self.get_setting(
-                        "compatibility_dialog_min_version"
-                    )
+                    min_ver = self.get_setting("compatibility_dialog_min_version")
                     if int(major_version_number_str) < min_ver:
                         show_warning_dlg = False
 
@@ -433,9 +420,7 @@ class HarmonyEngine(Engine):
         self.logger.debug("port: %s", port)
 
         application_client_class = self.tk_harmony.application.Application
-        self.logger.debug(
-            "  application_client_class: %s " % application_client_class
-        )
+        self.logger.debug("  application_client_class: %s " % application_client_class)
 
         self._dcc_app = application_client_class(
             self, parent=self._qt_app_central_widget, host=host, port=int(port)
@@ -443,12 +428,8 @@ class HarmonyEngine(Engine):
         self.logger.debug("  self._dcc_app: %s " % self._dcc_app)
 
         self._dcc_app.register_callback("SHOW_MENU", self.on_show_menu)
-        self._dcc_app.register_callback(
-            "NEW_PROJECT_CREATED", self.on_new_project_created
-        )
-        self._dcc_app.register_callback(
-            "PROJECT_OPENED", self.on_project_opened
-        )
+        self._dcc_app.register_callback("NEW_PROJECT_CREATED", self.on_new_project_created)
+        self._dcc_app.register_callback("PROJECT_OPENED", self.on_project_opened)
         self._dcc_app.register_callback("PING", self.on_ping)
         self._dcc_app.register_callback("QUIT", self.on_app_quit)
 
@@ -482,9 +463,7 @@ class HarmonyEngine(Engine):
         if self.has_ui:
             # create our menu handler
             self.logger.debug("self._menu_generator: %s", self._menu_generator)
-            self._menu_generator = self.tk_harmony.MenuGenerator(
-                self, self._menu_name
-            )
+            self._menu_generator = self.tk_harmony.MenuGenerator(self, self._menu_name)
 
             self.logger.debug("self._menu_generator: %s", self._menu_generator)
             self._qt_app.setActiveWindow(self._menu_generator.menu_handle)
@@ -524,7 +503,7 @@ class HarmonyEngine(Engine):
         self._qt_app_main_window.setCentralWidget(self._qt_app_central_widget)
         self._qt_app.setQuitOnLastWindowClosed(False)
 
-        # Make the QApplication use the dark theme. Must be called after the 
+        # Make the QApplication use the dark theme. Must be called after the
         # QApplication is instantiated
         self._initialize_dark_look_and_feel()
 
@@ -605,9 +584,7 @@ class HarmonyEngine(Engine):
             if app_instance:
                 # Add entry 'command name: command function' to the command
                 # dictionary of this app instance.
-                cmd_dict = app_instance_commands.setdefault(
-                    app_instance.instance_name, {}
-                )
+                cmd_dict = app_instance_commands.setdefault(app_instance.instance_name, {})
                 cmd_dict[cmd_name] = value["callback"]
 
         # Run the series of app instance commands listed in the
@@ -657,9 +634,7 @@ class HarmonyEngine(Engine):
 
                         command_function()
                     else:
-                        known_commands = ", ".join(
-                            "'%s'" % name for name in cmd_dict
-                        )
+                        known_commands = ", ".join("'%s'" % name for name in cmd_dict)
                         self.logger.warning(
                             "%s configuration setting 'run_at_startup' "
                             "requests app '%s' unknown command '%s'. "
@@ -707,9 +682,7 @@ class HarmonyEngine(Engine):
         # where "basename" is the leaf part of the logging record name,
         # for example "tk-multi-shotgunpanel" or "qt_importer".
         if record.levelno < logging.INFO:
-            formatter = logging.Formatter(
-                "Debug: Shotgun %(basename)s: %(message)s"
-            )
+            formatter = logging.Formatter("Debug: Shotgun %(basename)s: %(message)s")
         else:
             formatter = logging.Formatter("Shotgun %(basename)s: %(message)s")
 
@@ -750,9 +723,7 @@ class HarmonyEngine(Engine):
                 dialog.close()
             except Exception as exception:
                 traceback.print_exc()
-                self.logger.error(
-                    "Cannot close dialog %s: %s", dialog_window_title, exception
-                )
+                self.logger.error("Cannot close dialog %s: %s", dialog_window_title, exception)
 
     # --------------------
     # callbacks
@@ -779,9 +750,7 @@ class HarmonyEngine(Engine):
 
     def on_new_project_created(self, **kwargs):
         path = kwargs.get("path")
-        change_context = self.get_setting(
-            "change_context_on_new_project", False
-        )
+        change_context = self.get_setting("change_context_on_new_project", False)
         if change_context:
             refresh_engine(path, self.context)
         else:

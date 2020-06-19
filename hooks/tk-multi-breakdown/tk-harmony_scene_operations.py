@@ -58,9 +58,7 @@ class BreakdownSceneOperations(Hook):
         for read_node in read_nodes:
             ref_path = dcc_app.get_node_metadata(read_node, attr_name)
             if ref_path:
-                ref_path = sgtk.util.shotgun_path.ShotgunPath.from_current_os_path(
-                    ref_path
-                )
+                ref_path = sgtk.util.shotgun_path.ShotgunPath.from_current_os_path(ref_path)
 
                 refs.append(
                     {
@@ -79,9 +77,7 @@ class BreakdownSceneOperations(Hook):
             ref_path = dcc_app.get_scene_metadata(audio_metadata_name)
 
             if ref_path:
-                ref_path = sgtk.util.shotgun_path.ShotgunPath.from_current_os_path(
-                    ref_path
-                )
+                ref_path = sgtk.util.shotgun_path.ShotgunPath.from_current_os_path(ref_path)
 
                 refs.append(
                     {
@@ -120,6 +116,5 @@ class BreakdownSceneOperations(Hook):
 
         if items:
             engine.show_busy(
-                "tk-multi-breakdown",
-                "Updating functionality has not been implemented yet.",
+                "tk-multi-breakdown", "Updating functionality has not been implemented yet."
             )
