@@ -257,7 +257,11 @@ class HarmonyLauncher(SoftwareLauncher):
         software_icon = os.path.join(
             os.path.dirname(path), "..", "..", "resources", "icons", "harmony%s.png" % edition
         )
-        return software_icon
+        
+        if os.path.exists(software_icon):
+            return software_icon
+
+        return None
 
     def _icon_from_engine(self):
         """
@@ -307,20 +311,21 @@ class HarmonyLauncher(SoftwareLauncher):
             else []
         )
 
-        for executable_template in executable_templates:
-            executable_matches = self._glob_and_match(
-                executable_template, self.COMPONENT_REGEX_LOOKUP
-            )
-            for (path, key_dict) in executable_matches:
-                if executable_path == path:
-                    if sgtk.util.is_windows():
-                        path_root = os.path.expandvars("%APPDATA%")
-                    elif sgtk.util.is_linux():
-                        path_root = os.path.expandvars("~")
-                    elif sgtk.util.is_macos():
-                        path_root = os.path.expandvars("~/Library/Preferences")
+        path_root = None
+        if sgtk.util.is_windows():
+            path_root = os.path.expandvars("%APPDATA%")
+        elif sgtk.util.is_linux():
+            path_root = os.path.expandvars("~")
+        elif sgtk.util.is_macos():
+            path_root = os.path.expandvars("~/Library/Preferences")
 
-                    if path_root:
+        if path_root:
+            for executable_template in executable_templates:
+                executable_matches = self._glob_and_match(
+                    executable_template, self.COMPONENT_REGEX_LOOKUP
+                )
+                for (path, key_dict) in executable_matches:
+                    if executable_path == path:
                         scripts_version = "%s00" % key_dict["version"].split(".")[0]
 
                         scripts_path = os.path.join(
