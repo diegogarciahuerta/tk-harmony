@@ -123,7 +123,6 @@ and add the following changes from this file:
 # Toon Boom Harmony
 engines.tk-harmony.location:
   type: git
-  branch: master
   path: https://github.com/diegogarciahuerta/tk-harmony.git
   version: v1.0.0
 ```
@@ -185,6 +184,8 @@ One last step is to cache the engine and apps from the configuration files into 
 (in our case we placed the pipeline configuration under `D:\demo\configs\game_config`)
 
 * type `tank cache_apps` , and press enter. Shotgun Toolkit will start revising the changes we have done to the configuration yml files and downloading what is requires.
+
+**Note that this step is also required when you update to a newer version of the engine.**
 
 ![tank_cache_apps](config/images/tank_cache_apps.png)
 
