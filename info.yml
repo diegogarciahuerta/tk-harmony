@@ -28,9 +28,9 @@ configuration:
         type: int
         description: "Specify the minimum Application major version that will prompt a warning if
                      it isn't yet fully supported and tested with Toolkit.  To disable the warning
-                     dialog for the version you are testing, it is recomended that you set this
+                     dialog for the version you are testing, it is recommended that you set this
                      value to the current major version + 1."
-        default_value: 3
+        default_value: 21
 
     debug_logging: 
         type: bool
@@ -39,11 +39,11 @@ configuration:
 
     menu_favourites:
         type: list
-        description: "Controls the favourites section on the main menu. This is a list
+        description: "Controls the favorites section on the main menu. This is a list
                      and each menu item is a dictionary with keys app_instance and name.
                      The app_instance parameter connects this entry to a particular
                      app instance defined in the environment configuration file. The name
-                     is a menu name to make a favourite."
+                     is a menu name to make a favorite."
         allows_empty: True
         values:
             type: dict
@@ -98,4 +98,4 @@ description: "Shotgun Integration for Toon Boom Harmony"
 
 # Required minimum versions for this item to run
 requires_shotgun_version:
-requires_core_version: "v0.18.8"
+requires_core_version: "v0.19.0"
