@@ -782,8 +782,8 @@ function Server(host, port)
                 break;
             }
 
-            logger.debug("st_response_elapsed " + st_response.elapsed() + " secs | max : " + (self.MAX_READ_RESPONSE_TIME/1000) + " | responses : " + self._responses);
-            if (st_response_elapsed > self.MAX_READ_RESPONSE_TIME/1000)
+            self.log_debug("st_response_elapsed " + st_response.elapsed() + " secs | max : " + (self.MAX_READ_RESPONSE_TIME/1000) + " | responses : " + self._responses);
+            if (st_response.elapsed() > self.MAX_READ_RESPONSE_TIME/1000)
             {
                 self.log_debug("Did not Received command result in " + st_response.elapsed() + " secs | Request ID: " + request_id + " | Responses: " + self._responses);
                 break;
