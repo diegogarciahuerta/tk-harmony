@@ -1289,6 +1289,21 @@ function Engine()
 
 
 
+    self.display_message = function(data)
+    {
+        MessageBox.information(data.message);
+    }
+
+    self.custom_script = function(data)
+    {
+        scene.beginUndoRedoAccum("Custom script");
+        var str_result = eval(data.cmds);
+        scene.endUndoRedoAccum();
+        return str_result;
+    }
+
+
+
     // ------------------------------------------------------------------------
 
     self.registerCallback = function(command, callback)
@@ -1352,6 +1367,8 @@ function Engine()
         self.registerCallback("PING", self.ping);
 
         self.registerCallback("CLOSE",   self.stop);
+        self.registerCallback("DISPLAY_MESSAGE",  self.display_message);
+        self.registerCallback("CUSTOM_SCRIPT",    self.custom_script);
         self.log_debug("Registered callbacks");
     }
 

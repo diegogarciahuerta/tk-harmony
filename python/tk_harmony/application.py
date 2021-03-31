@@ -352,3 +352,12 @@ class Application(QTcpSocketClient):
             "GET_SOUND_COLUMN_FILENAMES", column_name=column_name
         )
         return result
+
+
+    def show_message(self, message):
+        result = self.send_and_receive_command("DISPLAY_MESSAGE", message=message)
+        return result
+
+    def custom_script(self, cmds):
+        result = self.send_and_receive_command("CUSTOM_SCRIPT", cmds=cmds)
+        return result
