@@ -93,6 +93,10 @@ class Application(QTcpSocketClient):
 
         return current_path
 
+    def render_image_sequence(self):
+        result = self.send_and_receive_command("RENDER_IMAGE_SEQUENCE")
+        return result
+
     def is_startup_project(self):
         result = self.send_and_receive_command("IS_STARTUP_PROJECT")
         return result

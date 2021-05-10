@@ -1047,6 +1047,53 @@ function Engine()
         return scene.isDirty();
     }
 
+    self.render_image_sequence = function (data)
+    {
+        MessageLog.trace("RENDER TO IMAGE SEQUENCE");
+
+        //Make sure the destination dir exists if not create it
+        var scenePath = scene.currentProjectPath();
+        var framesPath = "C:/Users/RT/Desktop/frames";
+
+        var  remappedScenePath = fileMapper.toNativePath(scenePath);
+        var  remappedFramesPath = fileMapper.toNativePath(framesPath);
+
+        var sceneDir = new Dir(remappedScenePath);
+        var frameDir = new Dir(remappedFramesPath);
+
+        if(!frameDir.exists)
+        {
+            frameDir.mkdir();
+        }
+
+        var defaultDisplay = scene.getDefaultDisplay();
+        if(defaultDisplay)
+        {
+            var tmpMovieImages = [];
+            
+            //TODO: Use a defined function for this connect so we can disconnect when done.
+            render.frameReady.connect(this, 
+                function(frame, frameCel)
+                {
+                    var filename = remappedFramesPath + "/movie-" + frame + ".png";
+                    frameCel.imageFile(filename);
+                    MessageLog.trace("*** Wrote Frame: " + filename);
+                    tmpMovieImages.push(filename);
+                }
+            );
+
+            render.setResolutionName("WebCC_Preview");
+            render.setRenderDisplay(defaultDisplay);
+            render.setWhiteBackground(false);
+            render.setAutoThumbnailCropping(false);
+            
+            MessageLog.trace("*** Rendering image sequence");
+            render.renderSceneAll();
+        }
+
+        return true;
+    }
+
     self.close_project = function(data)
     {
         // we do not really close the project, but open the startup one
@@ -1321,6 +1368,7 @@ function Engine()
         self.registerCallback("EXTRACT_THUMBNAIL",      self.extract_thumbnail);
         self.registerCallback("TOGGLE_DEBUG_LOGGING",   self.toggle_debug_logging);
         self.registerCallback("IS_STARTUP_PROJECT",     self.is_startup_project);
+        self.registerCallback("RENDER_IMAGE_SEQUENCE",  self.render_image_sequence);
         
         // timeline
         self.registerCallback("GET_FRAME_RANGE",     self.get_frame_range);
