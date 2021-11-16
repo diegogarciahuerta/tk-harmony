@@ -1002,6 +1002,12 @@ function Engine()
     {
         return scene.currentProjectPath() +"/" + scene.currentVersionName() + ".xstage";
     }
+
+    self.current_version_name = function(data)
+    {
+        var version_name = scene.currentVersionName();
+        return version_name;
+    }
     
     self.current_project_folder = function(data)
     {
@@ -1052,14 +1058,13 @@ function Engine()
         MessageLog.trace("RENDER TO IMAGE SEQUENCE");
 
         //Make sure the destination dir exists if not create it
-        var scenePath = scene.currentProjectPath();
-        var framesPath = "C:/Users/RT/Desktop/frames";
+        var framesPath = data.location;
 
-        var  remappedScenePath = fileMapper.toNativePath(scenePath);
         var  remappedFramesPath = fileMapper.toNativePath(framesPath);
-
-        var sceneDir = new Dir(remappedScenePath);
         var frameDir = new Dir(remappedFramesPath);
+        var sceneName = scene.currentScene();
+
+        var movieImages = [];
 
         if(!frameDir.exists)
         {
@@ -1068,30 +1073,69 @@ function Engine()
 
         var defaultDisplay = scene.getDefaultDisplay();
         if(defaultDisplay)
-        {
-            var tmpMovieImages = [];
-            
-            //TODO: Use a defined function for this connect so we can disconnect when done.
+        {            
             render.frameReady.connect(this, 
                 function(frame, frameCel)
                 {
-                    var filename = remappedFramesPath + "/movie-" + frame + ".png";
+                    var filename = remappedFramesPath + "/" + scene.currentVersionName() + "_" + frame + ".png";
                     frameCel.imageFile(filename);
                     MessageLog.trace("*** Wrote Frame: " + filename);
-                    tmpMovieImages.push(filename);
+                    movieImages.push(filename);
                 }
             );
 
-            render.setResolutionName("WebCC_Preview");
+            render.setResolution(data.res_x, data.res_y);
             render.setRenderDisplay(defaultDisplay);
             render.setWhiteBackground(false);
             render.setAutoThumbnailCropping(false);
             
             MessageLog.trace("*** Rendering image sequence");
-            render.renderSceneAll();
+            render.renderScene(data.start_frame, data.end_frame);
         }
 
-        return true;
+        return movieImages;
+    }
+
+    self.render_to_quicktime = function (data)
+    {
+        MessageLog.trace("RENDER TO QUICKTIME");
+        var framesPath = data.location;
+
+        var  remappedFramesPath = fileMapper.toNativePath(framesPath);
+        var frameDir = new Dir(remappedFramesPath);
+        var sceneName = scene.currentScene();
+
+        var movieImages = [];
+
+        if(!frameDir.exists)
+        {
+            frameDir.mkdir();
+        }
+
+        var defaultDisplay = scene.getDefaultDisplay();
+        if(defaultDisplay)
+        {            
+            render.frameReady.connect(this, 
+                function(frame, frameCel)
+                {
+                    var filename = remappedFramesPath + "/" + scene.currentVersionName() + "_" + frame + ".png";
+                    frameCel.imageFile(filename);
+                    MessageLog.trace("*** Wrote Frame: " + filename);
+                    movieImages.push(filename);
+                }
+            );
+
+            render.setResolution(data.res_x, data.res_y);
+            render.setRenderDisplay(defaultDisplay);
+            render.setWhiteBackground(false);
+            render.setAutoThumbnailCropping(false);
+            
+            MessageLog.trace("*** Rendering image sequence");
+            render.renderScene(data.start_frame, data.end_frame);
+        }
+        var output_path = fileMapper.toNativePath(data.location) + "/" + scene.currentVersionName() + ".mov";
+        WebCCExporter.exportMovieFromFiles(output_path, movieImages, data.start_frame, data.end_frame, data.with_sound);
+        return output_path;
     }
 
     self.close_project = function(data)
@@ -1359,6 +1403,7 @@ function Engine()
         self.registerCallback("OPEN_PROJECT",             self.open_project);
         self.registerCallback("GET_CURRENT_PROJECT_FOLDER", self.current_project_folder);
         self.registerCallback("GET_CURRENT_PROJECT_PATH", self.current_project_path);
+        self.registerCallback("CURRENT_VERSION_NAME", self.current_version_name)
         self.registerCallback("SAVE_PROJECT",             self.save_project);
         self.registerCallback("SAVE_NEW_VERSION",             self.save_new_version);
         self.registerCallback("SAVE_NEW_VERSION_ACTION", self.save_new_version_action);
@@ -1369,6 +1414,7 @@ function Engine()
         self.registerCallback("TOGGLE_DEBUG_LOGGING",   self.toggle_debug_logging);
         self.registerCallback("IS_STARTUP_PROJECT",     self.is_startup_project);
         self.registerCallback("RENDER_IMAGE_SEQUENCE",  self.render_image_sequence);
+        self.registerCallback("RENDER_TO_QUICKTIME", self.render_to_quicktime);
         
         // timeline
         self.registerCallback("GET_FRAME_RANGE",     self.get_frame_range);
