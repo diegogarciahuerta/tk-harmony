@@ -93,6 +93,28 @@ class Application(QTcpSocketClient):
 
         return current_path
 
+    def render_to_quicktime(self, location, start_frame, end_frame, with_sound, res_x, res_y, generate_thumbnail, thumbnail_frame):
+        self.engine.logger.debug("Rendering to quicktime movie")
+        self.send_command(
+            "RENDER_TO_QUICKTIME",
+            location=location,
+            start_frame=start_frame,
+            end_frame=end_frame,
+            with_sound=with_sound,
+            res_x=res_x,
+            res_y=res_y,
+            generate_thumbnail=generate_thumbnail,
+            thumbnail_frame=thumbnail_frame
+        )
+
+    def current_version_name(self):
+        version_name = self.send_and_receive_command("CURRENT_VERSION_NAME")
+        return version_name
+
+    def render_image_sequence(self):
+        result = self.send_and_receive_command("RENDER_IMAGE_SEQUENCE")
+        return result
+
     def is_startup_project(self):
         result = self.send_and_receive_command("IS_STARTUP_PROJECT")
         return result
