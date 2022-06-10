@@ -12,6 +12,7 @@ from itertools import chain
 from .client import QTcpSocketClient
 from .utils import copy_tree, normpath, Cached
 
+from tank_vendor import six
 
 __author__ = "Diego Garcia Huerta"
 __contact__ = "https://www.linkedin.com/in/diegogh/"
@@ -159,7 +160,7 @@ class Application(QTcpSocketClient):
             fields["extension"] = "xstage"
 
         ctx_fields = context.as_template_fields(work_template, validate=True)
-        fields = dict(chain(fields.iteritems(), ctx_fields.iteritems()))
+        fields = dict(chain(six.iteritems(fields), six.iteritems(ctx_fields)))
 
         destination_path = None
         # very cheap way to get the next available version

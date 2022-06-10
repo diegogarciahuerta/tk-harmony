@@ -28,6 +28,7 @@ from tank.platform import Engine
 from tank.platform.constants import SHOTGUN_ENGINE_NAME
 from tank.platform.constants import TANK_ENGINE_INIT_HOOK_NAME
 
+from tank_vendor import six
 
 __author__ = "Diego Garcia Huerta"
 __contact__ = "https://www.linkedin.com/in/diegogh/"
@@ -572,14 +573,14 @@ class HarmonyEngine(Engine):
 
     def _run_app_instance_commands(self):
         """
-        Runs the series of app instance commands listed in the 
+        Runs the series of app instance commands listed in the
         'run_at_startup' setting of the environment configuration yaml file.
         """
 
         # Build a dictionary mapping app instance names to dictionaries of
         # commands they registered with the engine.
         app_instance_commands = {}
-        for (cmd_name, value) in self.commands.iteritems():
+        for (cmd_name, value) in six.iteritems(self.commands):
             app_instance = value["properties"].get("app")
             if app_instance:
                 # Add entry 'command name: command function' to the command
@@ -609,7 +610,7 @@ class HarmonyEngine(Engine):
             else:
                 if not setting_cmd_name:
                     # Run all commands of the given app instance.
-                    for (cmd_name, command_function) in cmd_dict.iteritems():
+                    for (cmd_name, command_function) in six.iteritems(cmd_dict):
                         msg = (
                             "%s startup running app '%s' command '%s'.",
                             self.name,
