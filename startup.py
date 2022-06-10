@@ -257,7 +257,7 @@ class HarmonyLauncher(SoftwareLauncher):
         software_icon = os.path.join(
             os.path.dirname(path), "..", "..", "resources", "icons", "harmony%s.png" % edition
         )
-        
+
         if os.path.exists(software_icon):
             return software_icon
 

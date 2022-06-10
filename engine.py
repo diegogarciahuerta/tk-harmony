@@ -306,7 +306,7 @@ class HarmonyEngine(Engine):
     @property
     def host_info(self):
         """
-        :returns: A dictionary with information about the application hosting 
+        :returns: A dictionary with information about the application hosting
                   his engine.
 
         The returned dictionary is of the following form on success:
@@ -553,8 +553,8 @@ class HarmonyEngine(Engine):
 
     def post_context_change(self, old_context, new_context):
         """
-        Runs after a context change. The Harmony event watching will 
-        be stopped and new callbacks registered containing the new context 
+        Runs after a context change. The Harmony event watching will
+        be stopped and new callbacks registered containing the new context
         information.
 
         :param old_context: The context being changed away from.
