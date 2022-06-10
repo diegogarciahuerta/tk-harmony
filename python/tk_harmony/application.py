@@ -12,6 +12,7 @@ from itertools import chain
 from .client import QTcpSocketClient
 from .utils import copy_tree, normpath, Cached
 
+from tank_vendor import six
 
 __author__ = "Diego Garcia Huerta"
 __contact__ = "https://www.linkedin.com/in/diegogh/"
@@ -159,7 +160,7 @@ class Application(QTcpSocketClient):
             fields["extension"] = "xstage"
 
         ctx_fields = context.as_template_fields(work_template, validate=True)
-        fields = dict(chain(fields.iteritems(), ctx_fields.iteritems()))
+        fields = dict(chain(six.iteritems(fields), six.iteritems(ctx_fields)))
 
         destination_path = None
         # very cheap way to get the next available version
@@ -209,10 +210,10 @@ class Application(QTcpSocketClient):
             source_file = self.get_current_project_path()
 
         source_folder, source_filename = os.path.split(source_file)
-        source_filename_file, source_filename_ext = os.path.splitext(source_filename)
+        source_filename_file, _ = os.path.splitext(source_filename)
 
         target_folder, target_filename = os.path.split(target_file)
-        target_filename_file, target_filename_ext = os.path.splitext(target_filename)
+        target_filename_file, _ = os.path.splitext(target_filename)
 
         # we need to ignore all the other versions within the
         # folder of this WIP version except for the ones that

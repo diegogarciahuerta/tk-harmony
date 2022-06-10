@@ -12,9 +12,9 @@ function configure(packageFolder, packageName)
                                action   : "ShotgunMenu in ./configure.js",
                                longDesc : "Starts the shotgun connection",
                                order    : "256",
-                               categoryId   : "Shotgun", 
+                               categoryId   : "Shotgun",
                                categoryText : "Scripts" } );
-  
+
   //---------------------------
   //Create Menu items
   ScriptManager.addMenuItem( { targetMenuId : "Windows",
@@ -29,7 +29,7 @@ function configure(packageFolder, packageName)
   var ShotgunToolbar = new ScriptToolbarDef( { id          : "ShotgunToolbar",
                                                text        : "Shotgun",
                                                customizable: "false" } );
-  
+
   ShotgunToolbar.addButton( { text     : "Shotgun",
                               icon     : "shotgun.png",
                               action   : "ShotgunMenu in ./configure.js" ,
@@ -207,7 +207,7 @@ function dropMovieInNewElement( root, filename, transparency, alignmentRule, pro
     return null; // no read to add.
   }
 
-  var message = "Importing:\n\t" + name+"\n"; 
+  var message = "Importing:\n\t" + name+"\n";
   progress_callback(message);
 
   var uniqueColumnName = getUniqueColumnName(name);
@@ -239,24 +239,24 @@ function dropMovieInNewElement( root, filename, transparency, alignmentRule, pro
 
   MovieImport.setMovieFilename(filename)
   MovieImport.setImageFolder(image_folder)
-  MovieImport.setImagePrefix(name) 
+  MovieImport.setImagePrefix(name)
   MovieImport.setAudioFile(image_folder + "/" + name + ".wav");
 
   MovieImport.doImport();
-  
+
   var image_count = MovieImport.numberOfImages();
 
   for (var i = 1; i <= image_count; i++)
   {
-      var message = "Importing:\n\t" + name + "\n"; 
+      var message = "Importing:\n\t" + name + "\n";
       message += "\nCreating drawings " + i.toString() + " of " + image_count.toString()+"\n\n";
       progress_callback(message);
 
     var timing = i.toString();
     // unfortunately MovieImport.image(i) does not work as it gives us
     // the images in the wrong order. luckily we can recreate the filename
-    // easily... 
-    var image_path = image_folder + name + "-"+timing+".png"; 
+    // easily...
+    var image_path = image_folder + name + "-"+timing+".png";
     Drawing.create(elemId, timing, true); // create a drawing drawing, 'true' indicate that the file exists.
     var drawingFilePath = Drawing.filename(elemId, timing);   // get the actual path, in tmp folder.
 
@@ -264,10 +264,10 @@ function dropMovieInNewElement( root, filename, transparency, alignmentRule, pro
     column.setEntry(uniqueColumnName, 1, i, timing );
   }
 
-  var message = "Importing:\n\t" + name + "\n"; 
+  var message = "Importing:\n\t" + name + "\n";
   message += "\nDone.\n\n";
   // last one with a timer to close the show busy dialog automatically
-  progress_callback(message, 3000); 
+  progress_callback(message, 3000);
   return read; // name of the new drawing layer.
 }
 
@@ -300,10 +300,10 @@ function import_sound(filename)
     result = column.importSound(column_name, frame, filename);
 
     // unfortunately there is no way to attach metadata to sound columns
-    // so we do it at scene level. This will break easily if the column is 
+    // so we do it at scene level. This will break easily if the column is
     // renamed in anyway!
     setSceneMetadata(column_name +"." + META_SHOTGUN_PATH, filename);
-    
+
     return result;
 }
 
@@ -329,7 +329,7 @@ function import_movie(filename, parent)
 
   if (engine != null)
     engine.clear_busy();
-  
+
   var read_node = dropMovieInNewElement(parent, filename, transparency, alignmentRule, progress_callback);
 
   return read_node;
@@ -339,12 +339,12 @@ function import_movie(filename, parent)
 // -----------------------------------------------------------------------------
 // Meta Data related functions
 //
-// Since 'scene' functions had metadata scripting methods, I was looking for the 
+// Since 'scene' functions had metadata scripting methods, I was looking for the
 // equivalent in the node functions with no luck.
-// Fairly obscure from Harmony, the metadata editor GUI is not more than a 
+// Fairly obscure from Harmony, the metadata editor GUI is not more than a
 // node property editor that add/modifies the property 'meta' in a given node.
 //
-// Note that we store all our shotgun metadata under meta.shotgun property. 
+// Note that we store all our shotgun metadata under meta.shotgun property.
 // -----------------------------------------------------------------------------
 
 
@@ -417,7 +417,7 @@ this.debug = true;
 
 function log_debug(data)
 {
-    message = typeof(data.message) != "undefined" ? data.message : data; 
+    message = typeof(data.message) != "undefined" ? data.message : data;
 
     if (this.debug)
         MessageLog.trace("(DEBUG) Shotgun bridge: " + message.toString());
@@ -426,28 +426,28 @@ function log_debug(data)
 
 function log_info(data)
 {
-    message = typeof(data.message) != "undefined" ? data.message : data; 
-    MessageLog.trace("(INFO) Shotgun bridge: " + message.toString());    
+    message = typeof(data.message) != "undefined" ? data.message : data;
+    MessageLog.trace("(INFO) Shotgun bridge: " + message.toString());
 }
 
 
 function log_warning(data)
 {
-    message = typeof(data.message) != "undefined" ? data.message : data; 
+    message = typeof(data.message) != "undefined" ? data.message : data;
     MessageLog.trace("(WARNING) Shotgun bridge: " + message.toString());
 }
 
 
 function log_error(data)
 {
-    message = typeof(data.message) != "undefined" ? data.message : data; 
+    message = typeof(data.message) != "undefined" ? data.message : data;
     MessageLog.trace("(ERROR) Shotgun bridge: " + message.toString());
 }
 
 
 function log_exception(data)
 {
-    message = typeof(data.message) != "undefined" ? data.message : data; 
+    message = typeof(data.message) != "undefined" ? data.message : data;
     MessageLog.trace("(EXCEPTION) Shotgun bridge: " + message.toString());
 }
 
@@ -486,7 +486,7 @@ function find_widgets(node, node_name, node_text, stop_if_found,  level, result)
     for (i in node.children())
     {
         find_widgets(node.children()[i], node_name, node_text, stop_if_found,  level+1, result);
-    } 
+    }
     return result;
 }
 
@@ -507,7 +507,7 @@ function ask_question(title, message, default_option)
 }
 
 
-function Server(host, port) 
+function Server(host, port)
 {
     var self = this;
     self.name = "Server"
@@ -519,14 +519,14 @@ function Server(host, port)
     self._block_size = 0;
     self.INT32_SIZE = 4;
     self.MAX_READ_RESPONSE_TIME = 5000;
-    
+
     self.log_debug = log_debug;
     self.log_info = log_info;
     self.log_warning = log_warning;
     self.log_error = log_error;
     self.log_exception = log_exception;
     self.debug = true;
-    
+
     // rpc-ish
     self.m_id = 0;
     self._callbacks = null;
@@ -572,7 +572,7 @@ function Server(host, port)
 
     self.register_command = function(command, callback)
     {
-      if (self._callbacks === null) 
+      if (self._callbacks === null)
         self._callbacks = {};
 
       //MessageLog.trace("Registered command: " + command)
@@ -633,7 +633,7 @@ function Server(host, port)
             if (self._block_size > 0 && self.connection.bytesAvailable() >= self._block_size)
             {
                 var data = self.connection.read(self._block_size);
-                
+
                 // create the request
                 var request = "";
                 for ( var j = 0; j < data.size(); j++)
@@ -645,7 +645,7 @@ function Server(host, port)
                 }
                 self.log_debug("Request number: " + i + " | About to process | Request: " + request)
                 self._process_request(request) // #, caller_request_id=request_id)
-                self._block_size = 0; 
+                self._block_size = 0;
                 i+=1;
             }
         }
@@ -711,7 +711,7 @@ function Server(host, port)
         if (command.method != null)
         {
             self.log_debug("A function call. " + request);
-            var method = command.method.toUpperCase(); 
+            var method = command.method.toUpperCase();
             var params = command.params;
             var return_requested = command.request_return;
 
@@ -721,7 +721,7 @@ function Server(host, port)
 
             if (self._callbacks && method in self._callbacks)
             {
-                try 
+                try
                 {
                    var result = self._callbacks[method](params);
                    if (return_requested == true)
@@ -756,7 +756,7 @@ function Server(host, port)
     {
         // request for a return value
         var request = self._prepare_request(method, data, true);
-        var request_id = request.id; 
+        var request_id = request.id;
 
         var st = new QTime();
         st.start();
@@ -803,13 +803,13 @@ function Server(host, port)
 
     self.send_reply = function(request_id, result)
     {
-        try 
+        try
         {
             var reply = self._prepare_reply(request_id, result)
             MessageLog.trace("(DEBUG) Sending Response:" + reply);
             self._send(reply);
         }
-        catch(err) 
+        catch(err)
         {
             var reply = self._prepare_error(request_id, err)
             self.log_error("Unexpected error while sending " + err.message + " message id: " + message_id);
@@ -886,13 +886,13 @@ function Engine()
         var icon_file = resources_path + "/ui/sg_logo_80px.png";
         var ui = UiLoader.load(ui_file);
         ui.windowTitle = "Shotgun Harmony Engine";
-        
+
         var icon_widget = ui.frame.horizontalLayout.itemAt(0).widget();
         icon_widget.icon = icon_file ;
 
         var title_widget = ui.frame.horizontalLayout.verticalLayout.itemAt(0).widget();
         var details_widget = ui.frame.horizontalLayout.verticalLayout.itemAt(1).widget();
-        
+
         icon_widget.text = "<html><img src='" + icon_file + "'></html>";
         title_widget.text = "";
         details_widget.text = "";
@@ -912,7 +912,7 @@ function Engine()
         title_widget.text = title;
         details_widget.text = message;
         ui.show();
-        
+
         if (typeof close_on_elapsed_time != "undefined")
         {
             singleShotTimer(close_on_elapsed_time, ui.hide)
@@ -943,7 +943,7 @@ function Engine()
             f = new TemporaryFile( "png" );
             filename = f.path();
             f.close();
-    
+
             var result = find_widgets(self.window, "ContainGLWidget", true);
             var p = QPixmap.grabWindow(result[0].winId());
             p.save(filename, "png");
@@ -952,7 +952,7 @@ function Engine()
         return "";
     }
 
-    self.get_version = function(data) 
+    self.get_version = function(data)
     {
         var regex = /.* (\d+\.\d+\.\d+) .*/gm;
         var version_info = about.getVersionInfoStr ();
@@ -960,7 +960,7 @@ function Engine()
 
         return version_re[1];
     }
-    
+
     self.engine_restart = function(data)
     {
         // the python engine is about to be restarted , so make sure the
@@ -992,22 +992,22 @@ function Engine()
         }
         return false;
     }
-    
+
     self.toggle_debug_logging = function(data)
     {
         self.debug = data.enabled;
     }
-    
+
     self.current_project_path = function(data)
     {
         return scene.currentProjectPath() +"/" + scene.currentVersionName() + ".xstage";
     }
-    
+
     self.current_project_folder = function(data)
     {
         return scene.currentProjectPath();
     }
-    
+
     self.open_project = function(data)
     {
         var path = data.path;
@@ -1016,14 +1016,14 @@ function Engine()
         self.refresh_title();
         return scene.currentProjectPath();
     }
-    
+
     self.save_project = function (data)
     {
         var result = scene.saveAll();
         self.refresh_title();
         return scene.currentProjectPath();
     }
-    
+
     self.save_new_version_action = function(data)
     {
         Action.perform("onActionSaveAsScene");
@@ -1038,10 +1038,10 @@ function Engine()
         var result = scene.saveAsNewVersion(version_name, true);
         result = scene.saveAll();
         self.refresh_title();
-        
+
         return scene.currentProjectPath();
     }
-    
+
     self.needs_saving_project = function (data)
     {
         return scene.isDirty();
@@ -1054,15 +1054,15 @@ function Engine()
         self.window.requestOpenScene(scene);
         self.refresh_title();
     }
-    
+
     self.is_startup_project = function(data)
-    {   
+    {
         var is_startup_scene = false;
         var sg_metadata = scene.metadata("Shotgun Toolkit Engine");
-        
+
         if (sg_metadata != null)
             is_startup_scene = sg_metadata.value == "Startup template";
-        
+
         return is_startup_scene;
     }
 
@@ -1235,8 +1235,8 @@ function Engine()
         var sound_column = column.soundColumn(column_name)
 
         var sound_sequences = sound_column.sequences()
-        
-        var sound_filenames = [] 
+
+        var sound_filenames = []
 
         for (var j in sound_sequences)
         {
@@ -1273,10 +1273,10 @@ function Engine()
             {
                 version_name = scene.currentVersionName();
             }
-    
+
             if (version_name == "")
                 version_name = scene.currentScene();
-    
+
             app_version = about.productName();
             var title = app_version + " Project: " + version_name;
             self.window.setWindowTitle(title);
@@ -1321,17 +1321,17 @@ function Engine()
         self.registerCallback("EXTRACT_THUMBNAIL",      self.extract_thumbnail);
         self.registerCallback("TOGGLE_DEBUG_LOGGING",   self.toggle_debug_logging);
         self.registerCallback("IS_STARTUP_PROJECT",     self.is_startup_project);
-        
+
         // timeline
         self.registerCallback("GET_FRAME_RANGE",     self.get_frame_range);
         self.registerCallback("SET_FRAME_RANGE",     self.set_frame_range);
-        
+
         self.registerCallback("GET_FRAME_COUNT",     self.get_frame_count);
         self.registerCallback("SET_FRAME_COUNT",     self.set_frame_count);
-        
+
         self.registerCallback("GET_START_FRAME",     self.get_start_frame);
         self.registerCallback("SET_START_FRAME",     self.set_start_frame);
-        
+
         self.registerCallback("GET_STOP_FRAME",      self.get_stop_frame);
         self.registerCallback("SET_STOP_FRAME",      self.set_stop_frame);
 
@@ -1390,7 +1390,7 @@ function Engine()
             self.log_debug("Killed server");
             self.server.close();
             self.server = null;
-        }   
+        }
     }
 
     self.show_menu = function()
@@ -1410,7 +1410,7 @@ function Engine()
         var engine_pid = System.getenv("SGTK_HARMONY_ENGINE_PID");
         p = new Process2 (parseInt(engine_pid));
         p.terminate();
-    }    
+    }
 }
 
 function Shotgun()
@@ -1540,7 +1540,7 @@ function bootstrap()
         MessageLog.trace('   engine python: ' + python_exec);
         MessageLog.trace('   engine bootstrap: ' + boostrap_py);
 
-        var engine_process = new Process2(python_exec, boostrap_py,  engine_port, engine_name, app_id);  
+        var engine_process = new Process2(python_exec, boostrap_py,  engine_port, engine_name, app_id);
         MessageLog.trace('About to execute: ');
         MessageLog.trace(engine_process.commandLine());
 
